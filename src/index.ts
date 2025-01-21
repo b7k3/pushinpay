@@ -1,0 +1,1 @@
+export { Pushinpay } from "./pushinpay";
