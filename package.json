@@ -1,16 +1,31 @@
 {
   "name": "pushinpay",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": ["pushinpay", "api-pix", "pix"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/b7k3/pushinpay.git"
+  },
+  "keywords": [
+    "pushinpay",
+    "api-pix",
+    "pix"
+  ],
   "author": "b7k3",
   "license": "ISC",
   "description": "Pushinpay é uma biblioteca simples e eficiente para processar pagamentos via PIX no Brasil. Projetada com TypeScript, ela oferece uma integração fácil e segura com gateways de pagamento, permitindo que você crie, gerencie e acompanhe transações PIX diretamente no seu aplicativo.",
   "devDependencies": {
     "@types/node": "^22.10.7",
     "typescript": "^5.7.3"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "axios": "^1.7.9"
   }
 }

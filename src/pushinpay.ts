@@ -1,4 +1,5 @@
 import { Pix } from "./pix";
+import { Account } from "./account";
 
 export interface PushinpayConfig {
   token: string;
@@ -22,6 +23,7 @@ class InternalConfig {
 export class Pushinpay {
   private config: InternalConfig;
   public pix: Pix;
+  public account: Account;
 
   constructor(config: PushinpayConfig) {
     if (!config.token) {
@@ -30,5 +32,6 @@ export class Pushinpay {
 
     this.config = new InternalConfig(config);
     this.pix = new Pix(this.config);
+    this.account = new Account(this.config);
   }
 }

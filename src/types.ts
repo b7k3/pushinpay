@@ -41,4 +41,8 @@ export interface PixCreateResponse {
     pix_key_type: string;
     pix_key: string;
   }
+
+  export interface AccountBalanceResponse {
+    amount: number;
+  }
   

@@ -1,4 +1,5 @@
 import { PixCreateResponse, PixTransactionResponse, PixTransferResponse } from "./types";
+import axios from "axios";
 
 interface PixCreateParams {
   value: number;
@@ -30,75 +31,85 @@ export class Pix {
   public async create(params: PixCreateParams): Promise<PixCreateResponse> {
     const { value, webhook_url } = params;
 
-    const response = await fetch(`${this.config.apiBase}/pix/cashIn`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.config.token}`,
-      },
-      body: JSON.stringify({ value, webhook_url }),
-    });
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
+    try {
+      const response = await axios.post(`${this.config.apiBase}/pix/cashIn`, { value, webhook_url }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.config.token}`,
+        }
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response.data;
+      } else {
+        throw new Error("An unexpected error occurred");
+      }
     }
-
-    return response.json();
   }
 
   public async status(params: PixTransactionParams): Promise<PixTransactionResponse> {
     const { id } = params;
 
-    const response = await fetch(`${this.config.apiBase}/transactions/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.config.token}`,
-      },
-    });
+    try {
+      const response = await axios.get(`${this.config.apiBase}/transactions/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.config.token}`,
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response.data;
+      } else {
+        throw new Error("An unexpected error occurred");
+      }
     }
-
-    return response.json();
   }
 
   public async transfer(params: PixTransferParams): Promise<PixTransferResponse> {
     const { value, pix_key_type, pix_key, webhook_url } = params;
 
-    const response = await fetch(`${this.config.apiBase}/pix/cashOut`, {
-      method: "POST",
+    try {
+    const response = await axios.post(`${this.config.apiBase}/pix/cashOut`, { value, pix_key_type, pix_key, webhook_url }, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.config.token}`,
-      },
-      body: JSON.stringify({ value, pix_key_type, pix_key, webhook_url }),
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    } else {
+      throw new Error("An unexpected error occurred");
     }
+  }
 
-    return response.json();
   }
 
   public async refund(params: PixRefundParams): Promise<Array<[]>> {
     const { id } = params;
 
-    const response = await fetch(`${this.config.apiBase}/transactions/${id}/refund`, {
-      method: "POST",
+    try {
+    const response = await axios.post(`${this.config.apiBase}/transactions/${id}/refund`, {}, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.config.token}`,
       },
     });
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
+    return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response.data;
+      } else {
+        throw new Error("An unexpected error occurred");
+      }
     }
-
-    return response.json();
   }
 
 
