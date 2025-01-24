@@ -51,3 +51,9 @@ pushinpay.pix.transfer({
   webhook_url: "https://meusite.com/webhook" // URL de notificação
 });
 ```
+
+## Obter Saldo Atual da Conta
+
+```typescript
+pushinpay.account.balance();
+```
