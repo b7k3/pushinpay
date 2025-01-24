@@ -2,7 +2,7 @@ import { PixCreateResponse, PixTransactionResponse, PixTransferResponse } from "
 
 interface PixCreateParams {
   value: number;
-  webhook?: string;
+  webhook_url?: string;
 }
 
 interface PixTransactionParams {
@@ -28,7 +28,7 @@ export class Pix {
   }
 
   public async create(params: PixCreateParams): Promise<PixCreateResponse> {
-    const { value, webhook } = params;
+    const { value, webhook_url } = params;
 
     const response = await fetch(`${this.config.apiBase}/pix/cashIn`, {
       method: "POST",
@@ -36,7 +36,7 @@ export class Pix {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.config.token}`,
       },
-      body: JSON.stringify({ value, webhook }),
+      body: JSON.stringify({ value, webhook_url }),
     });
 
     if (!response.ok) {
