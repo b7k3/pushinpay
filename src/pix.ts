@@ -4,6 +4,7 @@ import axios from "axios";
 interface PixCreateParams {
   value: number;
   webhook_url?: string;
+  split_rules?: Array<{ value: number; account_id: string }>;
 }
 
 interface PixTransactionParams {
@@ -29,10 +30,10 @@ export class Pix {
   }
 
   public async create(params: PixCreateParams): Promise<PixCreateResponse> {
-    const { value, webhook_url } = params;
+    const { value, webhook_url, split_rules } = params;
 
     try {
-      const response = await axios.post(`${this.config.apiBase}/pix/cashIn`, { value, webhook_url }, {
+      const response = await axios.post(`${this.config.apiBase}/pix/cashIn`, { value, webhook_url, split_rules }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.config.token}`,
