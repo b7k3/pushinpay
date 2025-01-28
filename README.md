@@ -21,13 +21,15 @@ const pushinpay = new Pushinpay({ token: "SEU_TOKEN", sandbox: false });
 ```typescript
 pushinpay.pix.create({
   value: 100, // Valor da cobrança (INT)
-  webhook: "https://meusite.com/webhook", // URL de notificação
+
+  // Parâmetros opcionais
+  webhook_url: "https://meusite.com/webhook", // URL de notificação
   split_rules: [
     { 
       account_id: "9E0209A0-E1FA-4BE8-823B-119ECE83798A", // ID da conta
       value: 10 // Valor fixo em centavos
     }
-    ]
+     ]
 });
 ```
 
