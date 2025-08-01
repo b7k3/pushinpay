@@ -1,5 +1,6 @@
 import { PixCreateResponse, PixTransactionResponse, PixTransferResponse } from "./types";
 import axios from "axios";
+import sharp from "sharp";
 
 interface PixCreateParams {
   value: number;
@@ -39,7 +40,46 @@ export class Pix {
           Authorization: `Bearer ${this.config.token}`,
         }
       });
-      return response.data;
+
+
+
+      async function addWhiteBorder(base64Input: string) {
+        const borderSize = 30;
+        const imageBuffer = Buffer.from(base64Input, 'base64');
+
+
+        const original = sharp(imageBuffer);
+        const metadata = await original.metadata();
+
+        const width = metadata.width + borderSize * 2;
+        const height = metadata.height + borderSize * 2;
+
+
+        const outputBuffer = await sharp({
+          create: {
+            width,
+            height,
+            channels: 3,
+            background: { r: 255, g: 255, b: 255 }
+          }
+        })
+          .composite([
+            {
+              input: imageBuffer,
+              top: borderSize,
+              left: borderSize
+            }
+          ])
+          .png()
+          .toBuffer();
+
+
+        return outputBuffer.toString('base64');
+      }
+
+      const qr_code_base64 = await addWhiteBorder(response.data.qr_code_base64.split(",")[1]);
+
+      return { ...response.data, qr_code_base64 };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         return error.response.data;
@@ -74,21 +114,21 @@ export class Pix {
     const { value, pix_key_type, pix_key, webhook_url } = params;
 
     try {
-    const response = await axios.post(`${this.config.apiBase}/pix/cashOut`, { value, pix_key_type, pix_key, webhook_url }, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.config.token}`,
-      }
-    });
+      const response = await axios.post(`${this.config.apiBase}/pix/cashOut`, { value, pix_key_type, pix_key, webhook_url }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.config.token}`,
+        }
+      });
 
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      return error.response.data;
-    } else {
-      throw new Error("An unexpected error occurred");
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response.data;
+      } else {
+        throw new Error("An unexpected error occurred");
+      }
     }
-  }
 
   }
 
@@ -96,14 +136,14 @@ export class Pix {
     const { id } = params;
 
     try {
-    const response = await axios.post(`${this.config.apiBase}/transactions/${id}/refund`, {}, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.config.token}`,
-      },
-    });
+      const response = await axios.post(`${this.config.apiBase}/transactions/${id}/refund`, {}, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.config.token}`,
+        },
+      });
 
-    return response.data;
+      return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         return error.response.data;

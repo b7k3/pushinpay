@@ -1,6 +1,6 @@
 {
   "name": "pushinpay",
-  "version": "1.0.3",
+  "version": "1.0.9",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc"
@@ -26,6 +26,7 @@
     "README.md"
   ],
   "dependencies": {
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "sharp": "^0.34.3"
   }
 }
